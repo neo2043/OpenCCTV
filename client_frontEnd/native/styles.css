@@ -1,0 +1,47 @@
+* {
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+
+body{
+    background-color: #001021 !important;
+}
+
+.plusSignWrapper{
+    position: absolute;
+    right: 2rem;
+    bottom: 2rem;
+    z-index: 1;
+}
+
+.plusSign{
+    position:relative;
+    height: 4.5rem;
+    width: 4.5rem;
+    background-color: blue;
+    border-radius: 50px;
+    transition: all 0.5s ease;
+}
+
+.plusSign:hover{
+    background-color: #fff;
+}
+
+.plusSign:hover div{
+    background-color: blue;
+}
+  
+.plusSign div{
+    position:absolute;
+    height: 0.3rem;
+    width: 2rem;
+    left: calc(100%/2 - 2rem/2);
+    top: calc(100%/2 - 0.3rem/2);
+    background-color: #fff;
+    transition: all 0.5s ease;
+}
+
+.plusSign > .vertical{
+    transform: rotate(90deg);
+}
