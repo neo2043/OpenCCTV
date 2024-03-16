@@ -36,14 +36,14 @@ func (t *UdpAddr) SetUDPIP(ip interface{}) {
 	}
 }
 
-func (t *UdpAddr) GetIP() *net.UDPAddr {
+func (t *UdpAddr) GetUDP_IP() *net.UDPAddr {
 	if t.addr==nil{
 		fmt.Println("t.addr is nil")
 	}
 	return t.addr
 }
 
-func (t *UdpAddr) GetLocalUDPAddr() *net.UDPAddr {
+func (t *UdpAddr) GetLocalAddr() *net.UDPAddr {
 	conn, err := net.Dial("udp", "8.8.8.8:80")
 	if err != nil {
 		fmt.Println(err)
@@ -55,9 +55,9 @@ func (t *UdpAddr) GetLocalUDPAddr() *net.UDPAddr {
 
 func InitUDPPingServer(port int) {
 	addr:=&UdpAddr{}
-	addr.GetLocalUDPAddr()
+	addr.GetLocalAddr()
 	addr.SetPort(port)
-	clientRecieverConn, err := net.ListenUDP("udp4",addr.GetIP())
+	clientRecieverConn, err := net.ListenUDP("udp4",addr.GetUDP_IP())
 	if err!=nil{
 		fmt.Println("server reciever error")
 	}
@@ -73,7 +73,7 @@ func InitUDPPingServer(port int) {
 				if err!=nil{
 					fmt.Println(err)
 				}
-				conn.Write([]byte(addr.GetIP().String()))
+				conn.Write([]byte(addr.GetUDP_IP().String()))
 				conn.Close()
 			}
 		}

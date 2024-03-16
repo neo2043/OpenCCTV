@@ -8,7 +8,8 @@ import (
 func main() {
 	// udpPing.InitServer(9000)
 	f:=udpPing.UdpAddr{}
-	f.GetLocalUDPAddr()
+	f.GetLocalAddr()
 	f.SetPort(8000)
-	fmt.Println(f.GetIP())
+	fmt.Println(f.GetUDP_IP())
+	
 }
