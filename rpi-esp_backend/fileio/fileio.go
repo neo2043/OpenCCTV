@@ -7,12 +7,12 @@ import (
 	"os"
 )
 
-type fileSaveData struct {
+type FileSaveData struct {
 	Name string `json:"name"`
 	// Id   string `json:"id"`
 }
 
-type tempSaveData struct {
+type TempSaveData struct {
 	// Id        string `json:"id"`
 	Ip        string `json:"ip"`
 	Name      string `json:"name"`
@@ -59,7 +59,7 @@ func (f *File) MakePath() (error) {
 }
 
 
-func (f *File) Write(data map[string]tempSaveData) error {
+func (f *File) Write(data map[string]TempSaveData) error {
 	tempfilesavestruct:=tempTosave(data)	
 	temp,err:=json.Marshal(tempfilesavestruct)
 	if err!=nil{
@@ -72,17 +72,17 @@ func (f *File) Write(data map[string]tempSaveData) error {
 	return nil
 }
 
-func (f *File) Read() (map[string]tempSaveData,error) {
-	temptempsavedatastruct:=make(map[string]tempSaveData)
+func (f *File) Read() (map[string]TempSaveData,error) {
+	tempTempsavedatastruct:=make(map[string]TempSaveData)
 	data,err:=os.ReadFile(f.path)
 	if err!=nil{
 		return nil,err
 	}
-	err = json.Unmarshal(data,&temptempsavedatastruct)
+	err = json.Unmarshal(data,&tempTempsavedatastruct)
 	if err!=nil{
 		return nil,err
 	}
-	return temptempsavedatastruct,nil
+	return tempTempsavedatastruct,nil
 }
 
 func keyMap[K string, V interface{}](m map[K]V) []K {
@@ -93,11 +93,11 @@ func keyMap[K string, V interface{}](m map[K]V) []K {
 	return r
 }
 
-func tempTosave(data map[string]tempSaveData) map[string]fileSaveData {
+func tempTosave(data map[string]TempSaveData) map[string]FileSaveData {
 	tempKey:=keyMap(data)
-	tempReturnstruct:=make(map[string]fileSaveData)
+	tempReturnstruct:=make(map[string]FileSaveData)
 	for _,j:=range tempKey{
-		tempReturnstruct[j]=fileSaveData{Name: data[j].Name}
+		tempReturnstruct[j]=FileSaveData{Name: data[j].Name}
 	}
 	return tempReturnstruct
 }
