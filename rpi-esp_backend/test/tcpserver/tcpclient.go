@@ -17,14 +17,16 @@ func main() {
 
     // Send data to the server
     // ...
-	data := []byte("Hello, Server!")
+    c:=0
 	for{
+        data := []byte("Hello, Server!"+fmt.Sprintf("%d",c))
 		_, err = conn.Write(data)
 		if err != nil {
 		 fmt.Println("Error:", err)
 		 return
 		}
-		time.Sleep(time.Millisecond*1000)
+        time.Sleep(time.Second)
+        c++
 	}
     // Read and process data from the server
     // ...

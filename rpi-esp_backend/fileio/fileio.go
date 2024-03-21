@@ -1,23 +1,12 @@
 package fileio
 
 import (
+	structs"backend/structs"
 	"encoding/json"
 	"errors"
 	"path"
 	"os"
 )
-
-type FileSaveData struct {
-	Name string `json:"name"`
-	// Id   string `json:"id"`
-}
-
-type TempSaveData struct {
-	// Id        string `json:"id"`
-	Ip        string `json:"ip"`
-	Name      string `json:"name"`
-	Connected bool   `json:"connected"`
-}
 
 type File struct{
 	path string
@@ -58,8 +47,7 @@ func (f *File) MakePath() (error) {
 	return nil
 }
 
-
-func (f *File) Write(data map[string]TempSaveData) error {
+func (f *File) Write(data map[string]structs.TempSaveData) error {
 	tempfilesavestruct:=tempTosave(data)	
 	temp,err:=json.Marshal(tempfilesavestruct)
 	if err!=nil{
@@ -72,8 +60,8 @@ func (f *File) Write(data map[string]TempSaveData) error {
 	return nil
 }
 
-func (f *File) Read() (map[string]TempSaveData,error) {
-	tempTempsavedatastruct:=make(map[string]TempSaveData)
+func (f *File) Read() (map[string]structs.TempSaveData,error) {
+	tempTempsavedatastruct:=make(map[string]structs.TempSaveData)
 	data,err:=os.ReadFile(f.path)
 	if err!=nil{
 		return nil,err
@@ -93,11 +81,11 @@ func keyMap[K string, V interface{}](m map[K]V) []K {
 	return r
 }
 
-func tempTosave(data map[string]TempSaveData) map[string]FileSaveData {
+func tempTosave(data map[string]structs.TempSaveData) map[string]structs.FileSaveData {
 	tempKey:=keyMap(data)
-	tempReturnstruct:=make(map[string]FileSaveData)
+	tempReturnstruct:=make(map[string]structs.FileSaveData)
 	for _,j:=range tempKey{
-		tempReturnstruct[j]=FileSaveData{Name: data[j].Name}
+		tempReturnstruct[j]=structs.FileSaveData{Name: data[j].Name}
 	}
 	return tempReturnstruct
 }

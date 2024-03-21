@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
+	"time"
 )
 
 func main() {
@@ -36,7 +37,7 @@ func handleClient(conn net.Conn, i int) {
 
 	// Create a buffer to read data into
 	buffer := make([]byte, 1024)
-
+	time.Sleep(10*time.Second)
 	for {
 		// Read data from the client
 		n, err := conn.Read(buffer)

@@ -58,35 +58,29 @@
 // 	}
 // }
 
-
 package main
 
 import (
-	"github.com/gofiber/fiber/v2"
-	fio"backend/fileio"
+	fio "backend/fileio"
 	"fmt"
+	"github.com/gofiber/fiber/v2"
 	"net"
 )
 
-type tempstruct struct{
-	app *fiber.App
-	
+type serverObjectStruct struct {
+	tcpListener  net.Listener
+	httpListener *fiber.App	
 }
 
-func main(){
-
+func (t *serverObjectStruct) setTCPServer(address,port string) {
+	var err error
+	t.tcpListener, err = net.Listen("tcp", address+port)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
-package main
-
-import "github.com/gofiber/fiber/v2"
-
-func main() {
-    app := fiber.New()
-
-    app.Get("/", func(c *fiber.Ctx) error {
-        return c.SendString("Hello, World!")
-    })
-
-    app.Listen(":3000")
+func (t *serverObjectStruct) setHTTPServer() {
+	t.httpListener = fiber.New()
 }
+
