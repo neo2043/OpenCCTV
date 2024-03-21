@@ -62,6 +62,7 @@ package main
 
 import (
 	fio "backend/fileio"
+	structs "backend/structs"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"net"
@@ -69,10 +70,10 @@ import (
 
 type serverObjectStruct struct {
 	tcpListener  net.Listener
-	httpListener *fiber.App	
+	httpListener *fiber.App
 }
 
-func (t *serverObjectStruct) setTCPServer(address,port string) {
+func (t *serverObjectStruct) setTCPServer(address, port string) {
 	var err error
 	t.tcpListener, err = net.Listen("tcp", address+port)
 	if err != nil {
@@ -83,4 +84,3 @@ func (t *serverObjectStruct) setTCPServer(address,port string) {
 func (t *serverObjectStruct) setHTTPServer() {
 	t.httpListener = fiber.New()
 }
-
