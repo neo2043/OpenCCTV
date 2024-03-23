@@ -47,8 +47,8 @@ func (f *File) MakePath() error {
 	return nil
 }
 
-func (f *File) Write(data map[string]structs.TempSaveData) error {
-	tempfilesavestruct := tempTosave(data)
+func (f *File) Write(data structs.TempSaveDataMap) error {
+	tempfilesavestruct := structs.ConvTempSaveDataMaptoFileSaveDataMap(data)
 	temp, err := json.Marshal(tempfilesavestruct)
 	if err != nil {
 		return err
@@ -60,8 +60,8 @@ func (f *File) Write(data map[string]structs.TempSaveData) error {
 	return nil
 }
 
-func (f *File) Read() (map[string]structs.TempSaveData, error) {
-	tempTempsavedatastruct := make(map[string]structs.TempSaveData)
+func (f *File) Read() (structs.TempSaveDataMap, error) {
+	tempTempsavedatastruct := make(structs.TempSaveDataMap)
 	data, err := os.ReadFile(f.path)
 	if err != nil {
 		return nil, err
@@ -71,21 +71,4 @@ func (f *File) Read() (map[string]structs.TempSaveData, error) {
 		return nil, err
 	}
 	return tempTempsavedatastruct, nil
-}
-
-func keyMap[K string, V interface{}](m map[K]V) []K {
-	r := make([]K, 0, len(m))
-	for k := range m {
-		r = append(r, k)
-	}
-	return r
-}
-
-func tempTosave(data map[string]structs.TempSaveData) map[string]structs.FileSaveData {
-	tempKey := keyMap(data)
-	tempReturnstruct := make(map[string]structs.FileSaveData)
-	for _, j := range tempKey {
-		tempReturnstruct[j] = structs.FileSaveData{Name: data[j].Name}
-	}
-	return tempReturnstruct
 }

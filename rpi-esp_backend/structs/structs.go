@@ -13,6 +13,7 @@ type TempSaveData struct {
 }
 
 type TempSaveDataMap map[string]TempSaveData
+type FileSaveDataMap map[string]FileSaveData
 
 func (t *TempSaveData) UpdateIP(ip string) TempSaveData {
 	return TempSaveData{
@@ -61,16 +62,33 @@ func GetFileSaveDataStructMap() map[string]FileSaveData {
 func (t TempSaveDataMap) UpdateTempSaveDataMap(ip, name, urlpath, connected interface{}, key string) {
 	tempStruct := t[key]
 	if ip != nil {
-		tempStruct.UpdateIP(ip.(string))
+		tempStruct=tempStruct.UpdateIP(ip.(string))
 	}
 	if name != nil {
-		tempStruct.UpdateName(name.(string))
+		tempStruct=tempStruct.UpdateName(name.(string))
 	}
 	if urlpath != nil {
-		tempStruct.UpdateUrlPath(urlpath.(string))
+		tempStruct=tempStruct.UpdateUrlPath(urlpath.(string))
 	}
 	if connected != nil {
-		tempStruct.UpdateConnected(connected.(bool))
+		tempStruct=tempStruct.UpdateConnected(connected.(bool))
 	}
 	t[key] = tempStruct
+}
+
+func keyMap[K string, V interface{}](m map[K]V) []K {
+	r := make([]K, 0, len(m))
+	for k := range m {
+		r = append(r, k)
+	}
+	return r
+}
+
+func ConvTempSaveDataMaptoFileSaveDataMap(data TempSaveDataMap) FileSaveDataMap {
+	tempKey := keyMap(data)
+	tempReturnstruct := make(FileSaveDataMap)
+	for _, j := range tempKey {
+		tempReturnstruct[j] = FileSaveData{Name: data[j].Name,UrlPath: data[j].UrlPath}
+	}
+	return tempReturnstruct
 }

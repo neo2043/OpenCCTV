@@ -61,11 +61,11 @@
 package main
 
 import (
+	"fmt"
+	"net"
 	fio "backend/fileio"
 	structs "backend/structs"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"net"
 )
 
 type serverObjectStruct struct {
