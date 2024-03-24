@@ -1,100 +1,36 @@
 package udpPing
 
 import (
+	structs "backend/structs"
+	"backend/utils"
 	"fmt"
 	"net"
-	"strings"
 )
 
-type UdpAddr struct {
-	addr *net.UDPAddr
-}
-
-func (t *UdpAddr) SetPort(port int) {
-	t.addr.Port=port
-}
-
-func (t *UdpAddr) SetUDPIP(ip interface{}) {
-	switch argType := ip.(type) {
-		case string:
-			if t.addr!=nil{
-				t.addr.IP=net.ParseIP(ip.(string))
-			}else{
-				t.addr=&net.UDPAddr{}
-				t.addr.IP=net.ParseIP(ip.(string))
-			}
-		case []byte:
-			ip := ip.([]byte)
-			if t.addr!=nil{
-				t.addr.IP=net.IPv4(ip[0],ip[1],ip[2],ip[3])
-			}else{
-				t.addr=&net.UDPAddr{}
-				t.addr.IP=net.IPv4(ip[0],ip[1],ip[2],ip[3])
-			}
-		default:
-			fmt.Printf("Don't use type %T\n", argType)
-	}
-}
-
-func (t *UdpAddr) GetUDP_IP() *net.UDPAddr {
-	if t.addr==nil{
-		fmt.Println("t.addr is nil")
-	}
-	return t.addr
-}
-
-func (t *UdpAddr) GetLocalAddr() *net.UDPAddr {
-	conn, err := net.Dial("udp", "8.8.8.8:80")
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer conn.Close()
-	t.addr = conn.LocalAddr().(*net.UDPAddr)
-	return t.addr
-}
-
 func InitUDPPingServer(port int) {
-	addr:=&UdpAddr{}
-	addr.GetLocalAddr()
+	addr := structs.UdpAddr{}
+	addr.SetIP(utils.GetLocalIP())
 	addr.SetPort(port)
-	clientRecieverConn, err := net.ListenUDP("udp4",addr.GetUDP_IP())
-	if err!=nil{
+	clientRecieverConn, err := net.ListenUDP("udp4", addr.GetUDPAddrStruct())
+	fmt.Println("UDP server started on port: ",port)
+	if err != nil {
 		fmt.Println("server reciever error")
 	}
-	go func(){
-		for{
-			clientAddr,encData:=readfromClient(clientRecieverConn)
-			if encData=="INITCONN"{
+	go func() {
+		for {
+			clientAddr, encData := utils.ReadfromClient(clientRecieverConn)
+			if encData == "INITCONN" {
 				clientUDPAddr, err := net.ResolveUDPAddr("udp4", clientAddr)
-				if err!=nil{
+				if err != nil {
 					fmt.Println(err)
 				}
 				conn, err := net.DialUDP("udp4", nil, clientUDPAddr)
-				if err!=nil{
+				if err != nil {
 					fmt.Println(err)
 				}
-				conn.Write([]byte(addr.GetUDP_IP().String()))
+				conn.Write([]byte(addr.GetIP_Port() + ":connect"))
 				conn.Close()
 			}
 		}
 	}()
-}
-
-// func getRandomToken(length int) string {
-// 	randomBytes := make([]byte, length)
-// 	_, err := rand.Read(randomBytes)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	return base32.StdEncoding.EncodeToString(randomBytes)[:length]
-// }
-
-func readfromClient(client *net.UDPConn) (string,string) {
-	var buf [512]byte
-	n, _, err := client.ReadFromUDP(buf[0:])
-	if err != nil {
-		panic(err)
-	}
-	str:=strings.Split(string(buf[:n]), ":")
-	return str[1],str[2]
 }
