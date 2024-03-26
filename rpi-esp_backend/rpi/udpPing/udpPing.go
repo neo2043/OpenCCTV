@@ -1,14 +1,14 @@
 package udpPing
 
 import (
-	structs "backend/structs"
+	udpPingStructs "backend/structs/udppingstruct"
 	"backend/utils"
 	"fmt"
 	"net"
 )
 
 func InitUDPPingServer(port int) {
-	addr := structs.UdpAddr{}
+	addr := udpPingStructs.UdpAddr{}
 	addr.SetIP(utils.GetLocalIP())
 	addr.SetPort(port)
 	clientRecieverConn, err := net.ListenUDP("udp4", addr.GetUDPAddrStruct())

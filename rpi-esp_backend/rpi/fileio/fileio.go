@@ -1,7 +1,7 @@
 package fileio
 
 import (
-	structs "backend/structs"
+	fiostructs "backend/structs/fiostructs"
 	"encoding/json"
 	"errors"
 	"os"
@@ -47,8 +47,8 @@ func (f *File) MakePath() error {
 	return nil
 }
 
-func (f *File) Write(data structs.TempSaveDataMap) error {
-	tempfilesavestruct := structs.ConvTempSaveDataMaptoFileSaveDataMap(data)
+func (f *File) Write(data fiostructs.TempSaveDataMap) error {
+	tempfilesavestruct := fiostructs.ConvTempSaveDataMaptoFileSaveDataMap(data)
 	temp, err := json.Marshal(tempfilesavestruct)
 	if err != nil {
 		return err
@@ -60,8 +60,8 @@ func (f *File) Write(data structs.TempSaveDataMap) error {
 	return nil
 }
 
-func (f *File) Read() (structs.TempSaveDataMap, error) {
-	tempTempsavedatastruct := make(structs.TempSaveDataMap)
+func (f *File) Read() (fiostructs.TempSaveDataMap, error) {
+	tempTempsavedatastruct := make(fiostructs.TempSaveDataMap)
 	data, err := os.ReadFile(f.path)
 	if err != nil {
 		return nil, err
